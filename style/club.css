@@ -3,10 +3,11 @@ body {
   font-family: 'Noto Sans JP', 'Helvetica Neue', sans-serif;
   color: #ffffff;
   line-height: 1.6;
+  background-color: #0b1020;
 }
 
 .body {
-  width: 100vw;
+  width: 100%;
   position: absolute;
   left: 0;
   top: 0;
