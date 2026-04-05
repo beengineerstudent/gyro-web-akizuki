@@ -47,17 +47,17 @@ function resize() {
 
 function generatePetal(fromTop = true) {
     const petal = {};
-    petal.x = rand(0,innerWidth);
-    petal.y = fromTop ? rand(-innerHeight * 0.2, 0) : rand(0, innerHeight);
-    petal.size = rand(32, 64);
-    petal.angle = rand(0, 2 * Math.PI);
+    petal.x = rand(0, innerWidth);                                          // 花びらの x 座標
+    petal.y = fromTop ? rand(-innerHeight * 0.2, 0) : rand(0, innerHeight); // 花びらの y 座標
+    petal.size = rand(32, 64);                                              // 花びらの大きさ
+    petal.angle = rand(0, 2 * Math.PI);                                     // 花びらの角度
     petal.alpha = rand(0.6, 1);
     petal.fallSpeed = rand(40, 90);
     petal.driftSpeed = rand(-15, 15);
     petal.rotateSpeed = rand((-Math.PI * 2) / 3, (Math.PI * 2) / 3);
     petal.swayPhase = rand(0, 2 * Math.PI);                          // 揺れの初期位相
     petal.swayAmp = rand(4, 16);                                     // 揺れの振幅
-    petal.swayPhaseSpeed = rand(0.6, 1.6);  
+    petal.swayPhaseSpeed = rand(0.6, 1.6);
     return petal;
 }
 
@@ -68,11 +68,30 @@ function generatePetals(petalCount) {
     }
 }
 
+// function drawPetals(petals) {
+//     if (!petalImg.complete) return;
+//     petals.forEach((petal) => {
+
+//         context.save();
+//         context.translate(petal.x, petal.y);
+//         context.rotate(petal.angle);
+//         context.globalAlpha = petal.alpha;
+
+//         const width = petal.size;
+//         const height = petal.size;
+//         context.drawImage(petalImg, -width / 2, -height / 2, width, height);
+
+//         context.restore();
+//     });
+// }
+
 function drawPetals(petals) {
     if (!petalImg.complete) return;
-    petals.forEach((petal) => {
 
+    petals.forEach((petal) => {
+        // (x, y)を中心に、angle(度)回転した花びらを size の大きさで描画
         context.save();
+
         context.translate(petal.x, petal.y);
         context.rotate(petal.angle);
         context.globalAlpha = petal.alpha;
@@ -87,7 +106,7 @@ function drawPetals(petals) {
 
 function getScreenAngle() {
     const a = screen?.orientation?.angle;
-    if (typeof a == 'number') return a;
+    if (typeof a === 'number') return a;
     const w = window.orientation;
     if (typeof w === 'number') return w;
     return 0;
@@ -103,14 +122,14 @@ function normalizeScreenAxes(accelX, accelY) {
         virtualAccelX = accelX;
         virtualAccelY = accelY;
     } else if (screenAngle === 90) {
-        virtualAccelX = accelX;
-        virtualAccelY = accelY;
+        virtualAccelX = accelY;
+        virtualAccelY = -accelX;
     } else if (screenAngle === 180) {
-        virtualAccelX = accelX;
-        virtualAccelY = accelY;
+        virtualAccelX = -accelX;
+        virtualAccelY = -accelY;
     } else if (screenAngle === 270) {
-        virtualAccelX = accelX;
-        virtualAccelY = accelY;
+        virtualAccelX = -accelY;
+        virtualAccelY = accelX;
     }
 
     return {virtualAccelX, virtualAccelY, screenAngle};
@@ -123,18 +142,18 @@ function tick(now){
     context.clearRect(0, 0, innerWidth, innerHeight);
     context.fillStyle = 'rgba(11,16,32,1)';
     context.fillRect(0, 0, innerWidth, innerHeight);
-
+    
     const wind = tiltX * 90;
-    const grabityBoost = tiltY * 20;
+    const gravityBoost = tiltY * 20;
 
     for (let i = 0; i < petals.length; i++) {
         const petal = petals[i];
         petal.swayPhase += petal.swayPhaseSpeed * dt;
         const swaySpeed = petal.swayAmp * Math.sin(petal.swayPhase);
 
-        const speedX = petal.drifrSpeed + swaySpeed + wind;
-        const speedY = petal.fallSpeed + grabityBoost;
-
+        const speedX = petal.driftSpeed + swaySpeed + wind;
+        const speedY = petal.fallSpeed + gravityBoost;
+        
         petal.x += speedX * dt;
         petal.y += speedY * dt;
         petal.angle += petal.rotateSpeed * dt;
@@ -174,7 +193,7 @@ function onMotion(e) {
     tiltY = clamp(virtualAccelY / 9.8, -1, 1);
 
     if (debugElement !== null) {
-        debugElement.textContent = `OS:${isiOS ? 'iOS' : isAndroid ? 'Android' : 'Other'} angle:${screenAngle} tilitX:${tiltX.toFixed(2)} titlY:${tiltY.toFixed(2)}`
+        debugElement.textContent = `OS:${isIOS ? 'iOS' : isAndroid ? 'Android' : 'Other'} angle:${screenAngle} tiltX:${tiltX.toFixed(2)} tiltY:${tiltY.toFixed(2)}`
     }
 }
 
