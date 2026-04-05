@@ -178,7 +178,7 @@ function tick(now){
     requestAnimationFrame(tick);
 }
 function onMotion(e) {
-    const acceletation = e.acceletationIncludingGravite;
+    const acceletation = e.accelerationIncludingGravity;
     if (!acceletation) return;
 
     const accelX = -(acceletation.x ?? 0) *osSign;
