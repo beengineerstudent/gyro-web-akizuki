@@ -219,7 +219,7 @@ btn.addEventListener('click', async () => {
                 return;
             }
         }
-        window.addEventListener('devicemotion', ondevicemotion, {passive: true});
+        window.addEventListener('devicemotion', onMotion, {passive: true});
         btn.textContent = '許可OK';
         btn.disabled = true;
     } catch (err) {
